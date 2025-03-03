@@ -4,13 +4,13 @@ public class User {
     private final int id;
     private String username;
     private String passwordHash;
-    private UserRole role;
+    private Role role;
 
     public User(int id, String username, String passwordHash, String role) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
-        this.role = UserRole.valueOf(role.toUpperCase());
+        this.role = Role.valueOf(role.toUpperCase());
     }
 
     public int getId() {
@@ -33,11 +33,34 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public UserRole getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(Role role) {
         this.role = role;
+    }
+
+    public enum Role {
+        GUEST(100, 60_000),
+        NORMAL(1000, 60_000),
+        PREMIUM(5000, 60_000),
+        ADMIN(Integer.MAX_VALUE, 60_000);
+
+        private final int maxRequests;
+        private final long timeWindowMillis;
+
+        Role(int maxRequests, long timeWindowMillis) {
+            this.maxRequests = maxRequests;
+            this.timeWindowMillis = timeWindowMillis;
+        }
+
+        public int getMaxRequests() {
+            return maxRequests;
+        }
+
+        public long getTimeWindowMillis() {
+            return timeWindowMillis;
+        }
     }
 }

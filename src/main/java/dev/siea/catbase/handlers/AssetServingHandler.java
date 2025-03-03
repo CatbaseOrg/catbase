@@ -6,6 +6,8 @@ import com.pixelservices.flash.models.HttpMethod;
 import com.pixelservices.flash.models.RouteInfo;
 import dev.siea.catbase.hdi.RateLimitedHandler;
 
+import java.util.Base64;
+
 @RouteInfo(endpoint = "/api/asset/:id", method = HttpMethod.GET)
 public class AssetServingHandler extends RateLimitedHandler {
     public AssetServingHandler(Request req, Response res) {
@@ -14,10 +16,16 @@ public class AssetServingHandler extends RateLimitedHandler {
 
     @Override
     protected Object handleRateLimited() {
-        return "this shit is rate limited i think, now implementing db -> res";
+        int id = Integer.parseInt(req.getRouteParam("id"));
+        // then should have a helper method from db to get an image from it's id blah blah
+        byte[] imageBytes = decodeBase64ToBytes("STUFF RETURNED FROM DB : - )"); //swap for db later one if using base64
+        String contentType = "img/png"; //harcode for now until db design
+        res.status(200).type(contentType).body(imageBytes);
     }
 
-    private static byte[] decodeBse64ToBytes(String base64Image) {
-        return
+    // ;3
+    // silly..
+    private static byte[] decodeBase64ToBytes(String base64Image) {
+        return Base64.getDecoder().decode(base64Image);
     }
 }

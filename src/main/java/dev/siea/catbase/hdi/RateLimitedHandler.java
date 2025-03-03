@@ -3,7 +3,7 @@ package dev.siea.catbase.hdi;
 
 import com.pixelservices.flash.lifecycle.Request;
 import com.pixelservices.flash.lifecycle.Response;
-import dev.siea.catbase.db.models.UserRole;
+import dev.siea.catbase.db.models.User;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +23,7 @@ public abstract class RateLimitedHandler extends RBACAuthHandler {
     @Override
     protected final Object handleRBAC() {
         String ip = req.clientAddress().getAddress().getHostAddress().toString();
-        this.identifier = userRole.equals(UserRole.GUEST) ? ip : apiKey;
+        this.identifier = userRole.equals(User.Role.GUEST) ? ip : apiKey;
 
         this.maxRequests = userRole.getMaxRequests();
         this.timeWindowMillis = userRole.getTimeWindowMillis();
