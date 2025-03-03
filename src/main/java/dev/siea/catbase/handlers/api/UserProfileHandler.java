@@ -14,18 +14,20 @@ import dev.siea.catbase.hdi.RateLimitedHandler;
 public class UserProfileHandler extends RateLimitedHandler {
     ObjectMapper mapper = new ObjectMapper();
 
-    UserManager userManager = Catbase.getUserManager();
     public UserProfileHandler(Request req, Response res) {
         super(req, res);
     }
 
     @Override
     protected Object handleRateLimited() {
+        res.type("application/json");
+
         if(userRole.equals(User.Role.GUEST)){
             return "{\"error\":\"You must be logged in to view your profile\"}";
         }
 
         try {
+            res.status(200);
             return mapper.writeValueAsString(user);
         } catch (Exception e) {
             res.status(500);

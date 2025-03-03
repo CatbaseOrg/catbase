@@ -5,6 +5,7 @@ import dev.siea.catbase.db.models.User;
 import org.simpleyaml.configuration.ConfigurationSection;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class DatabaseWrapper {
     private static DatabaseAdapter adapter;
@@ -36,6 +37,10 @@ public class DatabaseWrapper {
 
     public static User getUser(String authToken) {
         return adapter.getUser(authToken);
+    }
+
+    public static List<User> getUsers(int limit, int offset, String orderBy, boolean ascending) {
+        return adapter.getUsers(limit, offset, orderBy, ascending);
     }
 
     public static User createUser(String email, String username, String password) {

@@ -6,6 +6,8 @@ import dev.siea.catbase.db.models.User;
 import org.simpleyaml.configuration.ConfigurationSection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostgreSQLAdapter implements DatabaseAdapter {
     private final String dbUrl;
@@ -157,6 +159,24 @@ public class PostgreSQLAdapter implements DatabaseAdapter {
         }
     }
 
+    @Override
+    public List<User> getUsers(int limit, int offset, String orderBy, boolean ascending) {
+        if (!orderBy.matches("id|email|username|last_login|role")) {
+            return null;
+        }
+
+        String query = "SELECT * FROM users ORDER BY " + orderBy + (ascending ? " ASC" : " DESC") + " LIMIT ? OFFSET ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            ResultSet resultSet = statement.executeQuery();
+            return mapResultSetToUserList(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Helper method to map ResultSet to User object
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
         Timestamp lastLoginTimestamp = resultSet.getTimestamp("last_login");
@@ -170,6 +190,14 @@ public class PostgreSQLAdapter implements DatabaseAdapter {
                 lastLoginMillis,
                 User.Role.valueOf(resultSet.getString("role"))
         );
+    }
+
+    private List<User> mapResultSetToUserList(ResultSet resultSet) throws SQLException {
+        List<User> users = new ArrayList<>();
+        while (resultSet.next()) {
+            users.add(mapResultSetToUser(resultSet));
+        }
+        return users;
     }
 
     // Not yet implemented

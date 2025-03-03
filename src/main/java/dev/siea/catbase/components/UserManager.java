@@ -3,6 +3,8 @@ package dev.siea.catbase.components;
 import dev.siea.catbase.db.DatabaseWrapper;
 import dev.siea.catbase.db.models.User;
 
+import java.util.List;
+
 public class UserManager {
     private final Cache<User> userCache;
 
@@ -35,6 +37,10 @@ public class UserManager {
             userCache.put(apiKey, userFromDb);
         }
         return userFromDb;
+    }
+
+    public List<User> getUsers(int limit, int offset, String orderBy, boolean ascending) {
+        return DatabaseWrapper.getUsers(limit, offset, orderBy, ascending);
     }
 
     public void updateUser(User user) {

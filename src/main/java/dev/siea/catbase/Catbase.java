@@ -7,7 +7,8 @@ import com.pixelservices.flash.components.fileserver.SourceType;
 import dev.siea.catbase.components.UserManager;
 import dev.siea.catbase.db.DatabaseWrapper;
 import dev.siea.catbase.handlers.api.UserProfileHandler;
-import dev.siea.catbase.handlers.api.internal.GetUsersHandler;
+import dev.siea.catbase.handlers.api.internal.GetAllUsersHandler;
+import dev.siea.catbase.handlers.api.internal.GetUserHandler;
 
 public class Catbase {
     private static final YamlConfig config = new YamlConfig("config.yml");
@@ -34,7 +35,8 @@ public class Catbase {
         // TESTING ONLY
         server.route("/api")
                .register(UserProfileHandler.class)
-               .register(GetUsersHandler.class);
+               .register(GetUserHandler.class)
+               .register(GetAllUsersHandler.class);
 
         server.start();
     }

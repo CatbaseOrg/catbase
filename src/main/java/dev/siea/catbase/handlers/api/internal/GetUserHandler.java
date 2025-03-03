@@ -10,10 +10,10 @@ import dev.siea.catbase.db.models.User;
 import dev.siea.catbase.hdi.InternalHandler;
 
 @RouteInfo(endpoint = "/user/:id", method = HttpMethod.GET)
-public class GetUsersHandler extends InternalHandler {
+public class GetUserHandler extends InternalHandler {
     ObjectMapper mapper = new ObjectMapper();
 
-    public GetUsersHandler(Request req, Response res) {
+    public GetUserHandler(Request req, Response res) {
         super(req, res);
     }
 

@@ -6,6 +6,10 @@ import com.pixelservices.flash.lifecycle.Request;
 import com.pixelservices.flash.lifecycle.Response;
 import com.pixelservices.flash.shaded.org.json.JSONObject;
 
+/**
+ * Bottom-level HDI that ensures authentication for handlers that require it, and
+ * provides the email and password for the authenticated user.
+ */
 public abstract class AuthCredentialsProvidingHandler extends RequestHandler {
     protected ExpectedRequestParameter emailField;
     protected String email;
