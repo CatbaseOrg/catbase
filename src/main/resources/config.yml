@@ -1,0 +1,11 @@
+port: 8080
+
+# Database configuration
+# Options: SQLite, MySQL, PostgreSQL, h2
+database:
+  type: SQLite
+  host: localhost:0808
+  database: catbase
+  credentials: # Not required for SQLite
+    username: root
+    password: password
