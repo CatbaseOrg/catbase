@@ -21,6 +21,7 @@ public class AssetServingHandler extends RateLimitedHandler {
         byte[] imageBytes = decodeBase64ToBytes("STUFF RETURNED FROM DB : - )"); //swap for db later one if using base64
         String contentType = "img/png"; //harcode for now until db design
         res.status(200).type(contentType).body(imageBytes);
+        return res.getBody();
     }
 
     // ;3

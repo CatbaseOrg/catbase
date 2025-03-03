@@ -1,48 +1,56 @@
 package dev.siea.catbase.db;
 
+import dev.siea.catbase.db.adapters.PostgreSQLAdapter;
 import dev.siea.catbase.db.models.User;
-import dev.siea.catbase.dto.UserLoginRequest;
 import org.simpleyaml.configuration.ConfigurationSection;
 
 import java.sql.SQLException;
 
 public class DatabaseWrapper {
-    private static DatabaseConnector connector;
+    private static DatabaseAdapter adapter;
 
     public static void connect(ConfigurationSection databaseSection) {
         try {
-            connector = new DatabaseConnector(databaseSection);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to establish database connection", e);
-        }
+            // Select the correct adapter based on the configuration
+            String dbType = databaseSection.getString("type");
+            switch (dbType.toLowerCase()) {
+                case "postgresql":
+                    adapter = new PostgreSQLAdapter(databaseSection);
+                    break;
+                // others
+                default:
+                    throw new IllegalArgumentException("Unsupported database type: " + dbType);
+            }
 
-        try {
-            createTables();
+            adapter.connect();
+            adapter.createTables();
+
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to create database tables", e);
-        }
-    }
-
-    private static void createTables() throws SQLException {
-        try (var connection = connector.getConnection()) {
-            var statement = connection.createStatement();
-            statement.execute(
-                    "CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL)");
+            throw new RuntimeException("Failed to establish database connection or create tables", e);
         }
     }
 
     public static User getUser(int id) {
-        //later
-        return new User(0, "admin", "password", "ADMIN");
-    }
-
-    public static User login(UserLoginRequest request) {
-        //later
-        return new User(0, "admin", "password", "ADMIN");
+        return adapter.getUser(id);
     }
 
     public static User getUser(String authToken) {
-        //later
-        return new User(0, "admin", "password", "ADMIN");
+        return adapter.getUser(authToken);
+    }
+
+    public static User createUser(String email, String username, String password) {
+        return adapter.createUser(email, username, password);
+    }
+
+    public static boolean deleteUser(int id) {
+        return adapter.deleteUser(id);
+    }
+
+    public static User updateUser(User user) {
+        return adapter.updateUser(user);
+    }
+
+    public static User login(User user) {
+        return adapter.login(user);
     }
 }

@@ -1,4 +1,5 @@
 port: 8080
+INTERNAL_API_KEY: "your_internal_api_key"
 
 # Database configuration
 # Options: SQLite, MySQL, PostgreSQL, h2

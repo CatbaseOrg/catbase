@@ -13,9 +13,9 @@ class DatabaseConnector {
 
     DatabaseConnector(ConfigurationSection databaseSection) {
         String dbType = databaseSection.getString("type");
-        String dbName = databaseSection.getString("name");
+        String database = databaseSection.getString("database");
         String host = databaseSection.getString("host");
-        String dbUrl = buildDatabaseUrl(dbType, host, dbName);
+        String dbUrl = buildDatabaseUrl(dbType, host, database);
         HikariConfig config = new HikariConfig();
         switch (dbType.toLowerCase()) {
             case "mysql":
@@ -54,15 +54,15 @@ class DatabaseConnector {
         }
     }
 
-    private String buildDatabaseUrl(String dbType, String host, String dbName) {
-        if (dbType == null || host == null || dbName == null) {
+    private String buildDatabaseUrl(String dbType, String host, String database) {
+        if (dbType == null || host == null || database == null) {
             throw new IllegalArgumentException("Database type, host, and name must be specified");
         }
         return switch (dbType.toLowerCase()) {
-            case "mysql" -> "jdbc:mysql://" + host + "/" + dbName;
-            case "sqlite" -> "jdbc:sqlite:" + dbName;
-            case "postgresql" -> "jdbc:postgresql://" + host + "/" + dbName;
-            case "h2" -> "jdbc:h2:" + host + "/" + dbName;
+            case "mysql" -> "jdbc:mysql://" + host + "/" + database;
+            case "sqlite" -> "jdbc:sqlite:" + database;
+            case "postgresql" -> "jdbc:postgresql://" + host + "/" + database;
+            case "h2" -> "jdbc:h2:" + host + "/" + database;
             default -> throw new IllegalArgumentException("Unsupported database type: " + dbType);
         };
     }
